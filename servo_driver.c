@@ -137,7 +137,7 @@ static struct file_operations fops = {
 	.write = _write,
 };
 
-static int __init shit_init(void){
+static int __init servo_init(void){
 	int ret;
 	ret = alloc_chrdev_region(&dev_num, 0, 1, DEVICE_NAME);
 	if (ret < 0){
@@ -183,9 +183,9 @@ static int __init shit_init(void){
 
 	return 0;
 }
-
-static void __exit shit_exit(void){
-	hrtimer_cancel(&pwm_timer);
+//clean up crew
+static void __exit servo_exit(void){
+	hrtimer_cancel(&pwm_timer); // lesson learned. always cancel timers.
 	hrtimer_cancel(&servo_timer);
 	gpio_set_value(GPIO_PIN, 0);
 	gpio_free(GPIO_PIN);
@@ -194,8 +194,8 @@ static void __exit shit_exit(void){
 	printk(KERN_INFO "Device unregistered\n");
 }
 
-module_init(shit_init);
-module_exit(shit_exit);
+module_init(servo_init);
+module_exit(servo_exit);
 
 MODULE_LICENSE("GPL");
 
